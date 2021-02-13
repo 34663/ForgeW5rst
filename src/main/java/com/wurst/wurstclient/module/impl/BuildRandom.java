@@ -43,12 +43,14 @@ public class BuildRandom extends Module {
         BlockPos pos;
         int attempts = 0;
 
+        // 手に持っているアイテムがブロックかどうか
         if (!checkHeldItem()) {
             return;
         }
 
         try {
             do {
+                // ランダムなpos
                 pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
             } while (++attempts < 128 && --delay < 0 && !tryToPlaceBlock(pos));
         } catch (Exception e) {
@@ -57,6 +59,7 @@ public class BuildRandom extends Module {
     }
 
     private boolean tryToPlaceBlock(BlockPos pos) {
+        // 置けるかチェック
         if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
             return false;
         }
@@ -64,7 +67,7 @@ public class BuildRandom extends Module {
         if (!placeBlock(pos)) {
             return false;
         }
-        mc.player.swingArm(EnumHand.MAIN_HAND);
+        mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
         this.delay = 4;
         return true;
     }
@@ -75,6 +78,8 @@ public class BuildRandom extends Module {
 
         for (EnumFacing facing : EnumFacing.values()) {
             final BlockPos neighbor = pos.offset(facing);
+
+            // 置けるかチェック2
             if (mc.world.getBlockState(neighbor).getBlock().canCollideCheck(mc.world.getBlockState(pos), false)) {
                 final Vec3d hitVec = posVec.add(new Vec3d(facing.getDirectionVec()).scale(0.5));
                 if (eyesPos.squareDistanceTo(hitVec) <= 36.0) {
