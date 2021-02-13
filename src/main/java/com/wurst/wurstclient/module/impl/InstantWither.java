@@ -19,13 +19,15 @@ import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
 
 public class InstantWither extends Module {
     private final ArrayList<BlockPos> positions = new ArrayList<>();
     private boolean soulSand, skull;
-    private int currentSlot;
+    private int currentSlot, delay;
 
     public InstantWither(String name, int keyCode) {
         super(name, keyCode);
@@ -37,12 +39,13 @@ public class InstantWither extends Module {
         soulSand = false;
         skull = false;
         currentSlot = -1;
+        delay = 0;
     }
 
     @Override
     public void onEvent(Event event) {
         if (event instanceof RightClickMouseEvent) {
-            if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK || mc.world.getBlockState(mc.objectMouseOver.getBlockPos()).getMaterial() == Material.AIR) {
+            if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK || mc.world.getBlockState(mc.objectMouseOver.getBlockPos()).getMaterial() == Material.AIR || delay > 0) {
                 return;
             }
 
@@ -64,19 +67,15 @@ public class InstantWither extends Module {
                 if (itemStack.getItem() == itemSoulSand && !soulSand) {
                     soulSand = true;
                     slot1 = slot;
-                    Wurst.getLogger().info(String.format("[ForgeWurst] Found SoulSand(%s)", slot));
                 }
 
-                if (itemStack.getItem() == itemSkull && soulSand && !skull) {
+                if (itemStack.getItem() == itemSkull && !skull) {
                     skull = true;
                     slot2 = slot;
-                    Wurst.getLogger().info(String.format("[ForgeWurst] Found Skull(%s)", slot));
                 }
             }
 
             if (soulSand && slot1 != -1) {
-                Wurst.getLogger().info("[ForgeWurst] SoulSand Process...");
-
                 offset = new int[][]{new int[3], {0, 1, 0}, {1, 1, 0}, {-1, 1, 0}};
                 for (i = offset.length, b = 0; b < i; ) {
                     int[] pos = offset[b];
@@ -92,13 +91,10 @@ public class InstantWither extends Module {
                         }
                     }
                 }
-
-                soulSand = false;
             }
 
-            if (skull && slot2 != -1) {
-                Wurst.getLogger().info("[ForgeWurst] Skull Process...");
-
+            this.positions.clear();
+            if (skull && soulSand && slot2 != -1) {
                 offset = new int[][]{new int[3], {1, 2, 0}, {0, 2, 0}, {-1, 2, 0}};
                 for (i = offset.length, b = 0; b < i; ) {
                     int[] pos = offset[b];
@@ -114,11 +110,15 @@ public class InstantWither extends Module {
                         }
                     }
                 }
-
-                skull = false;
             }
 
+            soulSand = false;
+            skull = false;
+            delay = 8;
             mc.player.inventory.currentItem = currentSlot;
+        }
+        if (event instanceof UpdateEvent) {
+            delay--;
         }
     }
 

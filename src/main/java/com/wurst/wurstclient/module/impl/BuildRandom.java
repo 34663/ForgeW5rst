@@ -2,6 +2,7 @@ package com.wurst.wurstclient.module.impl;
 
 import com.wurst.wurstclient.Wurst;
 import com.wurst.wurstclient.event.Event;
+import com.wurst.wurstclient.event.impl.UpdateEvent;
 import com.wurst.wurstclient.module.Module;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -31,27 +32,25 @@ public class BuildRandom extends Module {
 
     @Override
     public void onEvent(Event event) {
-    }
+        if (event instanceof UpdateEvent) {
+            int range = 5;
+            int bound = range * 2 + 1;
+            BlockPos pos;
+            int attempts = 0;
 
-    @SubscribeEvent
-    public void tickEvent(TickEvent.ClientTickEvent event) {
-        int range = 5;
-        int bound = range * 2 + 1;
-        BlockPos pos;
-        int attempts = 0;
+            // Whether the item in your hand is a block or not.
+            if (!checkHeldItem()) {
+                return;
+            }
 
-        // Whether the item in your hand is a block or not.
-        if (!checkHeldItem()) {
-            return;
-        }
-
-        try {
-            do {
-                // Random pos
-                pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
-            } while (++attempts < 128 && --delay < 0 && !tryToPlaceBlock(pos));
-        } catch (Exception e) {
-            Wurst.getLogger().info("[ForgeWurst] " + e.getMessage());
+            try {
+                do {
+                    // Random pos
+                    pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
+                } while (++attempts < 128 && --delay < 0 && !tryToPlaceBlock(pos));
+            } catch (Exception e) {
+                Wurst.getLogger().info("[ForgeWurst] " + e.getMessage());
+            }
         }
     }
 

@@ -20,12 +20,10 @@ public abstract class Module implements IMC, Listener {
     public void toggle() {
         this.enabled = !this.enabled;
         if (enabled) {
-            MinecraftForge.EVENT_BUS.register(this);
             Wurst.getEventManager().register(this);
             onEnabled();
             mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Enabled " + this.getName()));
         } else {
-            MinecraftForge.EVENT_BUS.unregister(this);
             Wurst.getEventManager().unregister(this);
             onDisabled();
             mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Disabled " + this.getName()));
