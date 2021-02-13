@@ -75,7 +75,7 @@ public class BuildRandom extends Module {
             if (mc.world.getBlockState(neighbor).getBlock().canCollideCheck(mc.world.getBlockState(pos), false)) {
                 final Vec3d dirVec = new Vec3d(facing.getDirectionVec());
                 final Vec3d hitVec = posVec.add(dirVec.scale(0.5));
-                if (eyesPos.squareDistanceTo(hitVec) <= 18.0625) {
+                if (eyesPos.squareDistanceTo(hitVec) <= 36.0) {
                     if (distanceSqPosVec <= eyesPos.squareDistanceTo(posVec.add(dirVec))) {
                         if (mc.world.rayTraceBlocks(eyesPos, hitVec, false, true, false) == null) {
                             float[] rotations = getNeededRotations(hitVec);
@@ -87,7 +87,7 @@ public class BuildRandom extends Module {
 
                             // Send Swing packets
                             mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-                            this.delay = 2.5F;
+                            this.delay = 3.0F;
                             return true;
                         }
                     }
