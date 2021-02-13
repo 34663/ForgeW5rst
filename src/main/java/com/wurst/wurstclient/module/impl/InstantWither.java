@@ -66,7 +66,8 @@ public class InstantWither extends Module {
                     slot1 = slot;
                     Wurst.getLogger().info(String.format("[ForgeWurst] Found SoulSand(%s)", slot));
                 }
-                if (itemStack.getItem() == itemSkull && !skull) {
+
+                if (itemStack.getItem() == itemSkull && soulSand && !skull) {
                     skull = true;
                     slot2 = slot;
                     Wurst.getLogger().info(String.format("[ForgeWurst] Found Skull(%s)", slot));
