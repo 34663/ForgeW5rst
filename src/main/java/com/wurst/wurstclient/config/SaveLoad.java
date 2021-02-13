@@ -12,7 +12,7 @@ public class SaveLoad {
     private File data;
 
     public SaveLoad() {
-        directory = new File(IMC.mc.mcDataDir, "ForgeWurst");
+        directory = new File(IMC.mc.gameDir, "ForgeWurst");
         if (!directory.exists()) {
             if (directory.mkdir()) {
                 Wurst.getLogger().info("[ForgeWurst] mkdir ForgeWurst successful");

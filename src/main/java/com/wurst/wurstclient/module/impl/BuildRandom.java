@@ -1,6 +1,7 @@
 package com.wurst.wurstclient.module.impl;
 
 import com.wurst.wurstclient.Wurst;
+import com.wurst.wurstclient.event.Event;
 import com.wurst.wurstclient.module.Module;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,6 +27,10 @@ public class BuildRandom extends Module {
     public void onDisabled() {
         super.onDisabled();
         this.delay = 0;
+    }
+
+    @Override
+    public void onEvent(Event event) {
     }
 
     @SubscribeEvent
@@ -56,16 +61,13 @@ public class BuildRandom extends Module {
             return false;
         }
 
-        if (placeBlock(pos)) {
-            return true;
-        }
-
+        this.placeBlock(pos);
         return false;
     }
 
-    public boolean placeBlock(BlockPos pos) {
+    public void placeBlock(BlockPos pos) {
         Vec3d eyesPos = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-        final Vec3d posVec = new Vec3d(pos).addVector(0.5, 0.5, 0.5);
+        final Vec3d posVec = new Vec3d(pos).add(0.5, 0.5, 0.5);
         final double distanceSqPosVec = eyesPos.squareDistanceTo(posVec);
 
         for (EnumFacing facing : EnumFacing.values()) {
@@ -88,13 +90,11 @@ public class BuildRandom extends Module {
                             // Send Swing packets
                             mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
                             this.delay = 3.0F;
-                            return true;
                         }
                     }
                 }
             }
         }
-        return false;
     }
 
     private boolean checkHeldItem() {

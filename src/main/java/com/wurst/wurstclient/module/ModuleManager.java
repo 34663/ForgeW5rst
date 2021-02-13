@@ -1,6 +1,8 @@
 package com.wurst.wurstclient.module;
 
+import com.wurst.wurstclient.module.impl.InstantWither;
 import com.wurst.wurstclient.module.impl.BuildRandom;
+import com.wurst.wurstclient.module.impl.NoFall;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ public class ModuleManager {
     public void initialize() {
         // add mod
         addModule(new BuildRandom("BuildRandom", 0));
+        addModule(new InstantWither("InstantWither", Keyboard.KEY_V));
+        addModule(new NoFall("NoFall", Keyboard.KEY_M));
     }
 
     private void addModule(Module module) {
@@ -33,6 +37,7 @@ public class ModuleManager {
                 }
             }
         } catch (Exception exception) {
+            return null;
         }
         return null;
     }

@@ -3,6 +3,7 @@ package com.wurst.wurstclient;
 import com.wurst.wurstclient.command.Command;
 import com.wurst.wurstclient.command.CommandManager;
 import com.wurst.wurstclient.config.SaveLoad;
+import com.wurst.wurstclient.event.EventManager;
 import com.wurst.wurstclient.module.ModuleManager;
 import com.wurst.wurstclient.utilities.IMC;
 import net.minecraftforge.client.event.ClientChatEvent;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 @Mod(modid = "wurst", name = "Wurst Client", version = "0.1")
 public class Wurst implements IMC {
     public static Logger logger;
+    private static EventManager eventManager;
     private static ModuleManager moduleManager;
     private static CommandManager commandManager;
     private static SaveLoad saveLoad;
@@ -33,6 +35,7 @@ public class Wurst implements IMC {
     public void init(FMLInitializationEvent event) {
         logger.info("[ForgeWurst] Initializing...");
         MinecraftForge.EVENT_BUS.register(this);
+        (eventManager = new EventManager()).initialize();
         (moduleManager = new ModuleManager()).initialize();
         (commandManager = new CommandManager()).initialize();
         (saveLoad = new SaveLoad()).loadFile();
@@ -85,6 +88,10 @@ public class Wurst implements IMC {
 
     public static ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    public static EventManager getEventManager() {
+        return eventManager;
     }
 
     public static SaveLoad getSaveLoad() {

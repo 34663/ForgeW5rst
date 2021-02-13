@@ -1,0 +1,10 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.wurst.wurstclient.mixin.client",
+  "mixins": [
+    "MixinMinecraft",
+    "entity.MixinEntityPlayerSP"
+  ],
+  "client": [],
+  "server": []
+}

@@ -1,11 +1,13 @@
 package com.wurst.wurstclient.module;
 
+import com.wurst.wurstclient.Wurst;
+import com.wurst.wurstclient.event.Listener;
 import com.wurst.wurstclient.utilities.IMC;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 
-public class Module implements IMC {
+public abstract class Module implements IMC, Listener {
     public String name;
     public int keyCode;
     public boolean enabled;
@@ -19,10 +21,12 @@ public class Module implements IMC {
         this.enabled = !this.enabled;
         if (enabled) {
             MinecraftForge.EVENT_BUS.register(this);
+            Wurst.getEventManager().register(this);
             onEnabled();
             mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Enabled " + this.getName()));
         } else {
             MinecraftForge.EVENT_BUS.unregister(this);
+            Wurst.getEventManager().unregister(this);
             onDisabled();
             mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Disabled " + this.getName()));
         }
