@@ -1,10 +1,10 @@
 {
+  "verbose": false,
   "compatibilityLevel": "JAVA_8",
   "package": "com.wurst.wurstclient.mixin.client",
-  "mixins": [
+  "refmap": "mixins.wurst.refmap.json",
+  "client": [
     "MixinMinecraft",
     "entity.MixinEntityPlayerSP"
-  ],
-  "client": [],
-  "server": []
+  ]
 }
