@@ -18,6 +18,7 @@ public class BindCommand extends Command {
             if (module != null) {
                 int key = Keyboard.getKeyIndex(args[1].toUpperCase());
                 module.setKeyCode(key);
+                Wurst.getSaveLoad().saveFile();
                 mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString(module.getName() + " bind to " + module.getKeyCode() + "."));
             } else {
                 mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Module was not found"));

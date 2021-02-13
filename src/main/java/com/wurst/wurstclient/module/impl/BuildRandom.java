@@ -1,24 +1,14 @@
 package com.wurst.wurstclient.module.impl;
 
 import com.wurst.wurstclient.module.Module;
-import com.wurst.wurstclient.utilities.RenderUtils;
-import com.wurst.wurstclient.utilities.Timer;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketAnimation;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
@@ -37,20 +27,20 @@ public class BuildRandom extends Module {
     }
 
     @SubscribeEvent
-    public void tickEvent(TickEvent.PlayerTickEvent event) {
+    public void tickEvent(TickEvent.ClientTickEvent event) {
         int range = 6;
         int bound = range * 2 + 1;
         BlockPos pos;
         int attempts = 0;
 
-        // 手に持っているアイテムがブロックかどうか
+        // Whether the item in your hand is a block or not.
         if (!checkHeldItem()) {
             return;
         }
 
         try {
             do {
-                // ランダムなpos
+                // Random pos
                 pos = new BlockPos(mc.player.getPosition()).add(random.nextInt(bound) - range, random.nextInt(bound) - range, random.nextInt(bound) - range);
             } while (++attempts < 128 && --delay < 0 && !tryToPlaceBlock(pos));
         } catch (Exception e) {
@@ -59,17 +49,19 @@ public class BuildRandom extends Module {
     }
 
     private boolean tryToPlaceBlock(BlockPos pos) {
-        // 置けるかチェック
+        // Check if it can be replaced.
         if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
             return false;
         }
 
-        if (!placeBlock(pos)) {
-            return false;
+        if (placeBlock(pos)) {
+            // Send Swing packets
+            mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
+            this.delay = 3;
+            return true;
         }
-        mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-        this.delay = 4;
-        return true;
+
+        return false;
     }
 
     public boolean placeBlock(BlockPos pos) {
@@ -79,7 +71,7 @@ public class BuildRandom extends Module {
         for (EnumFacing facing : EnumFacing.values()) {
             final BlockPos neighbor = pos.offset(facing);
 
-            // 置けるかチェック2
+            // Check if it can be placed.
             if (mc.world.getBlockState(neighbor).getBlock().canCollideCheck(mc.world.getBlockState(pos), false)) {
                 final Vec3d hitVec = posVec.add(new Vec3d(facing.getDirectionVec()).scale(0.5));
                 if (eyesPos.squareDistanceTo(hitVec) <= 36.0) {
