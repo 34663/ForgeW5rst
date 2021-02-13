@@ -17,8 +17,8 @@ public class ModuleManager {
     public void initialize() {
         // add mod
         addModule(new BuildRandom("BuildRandom", 0));
-        addModule(new InstantWither("InstantWither", Keyboard.KEY_V));
-        addModule(new NoFall("NoFall", Keyboard.KEY_M));
+        addModule(new InstantWither("InstantWither", 0));
+        addModule(new NoFall("NoFall", 0));
     }
 
     private void addModule(Module module) {
