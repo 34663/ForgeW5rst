@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 version = 'b2'
-group = 'com.wurst'
+group = 'com.w5rst'
 
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
@@ -52,7 +52,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property 'fml.coreMods.load', 'com.wurst.wurstclient.mixin.MixinLoaderForge'
+            property 'fml.coreMods.load', 'com.w5rst.w5rstclient.mixin.MixinLoaderForge'
             property 'mixin.env.disableRefMap', 'true'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -96,7 +96,7 @@ dependencies {
 
 mixin {
     defaultObfuscationEnv 'searge'
-    add sourceSets.main, 'mixins.wurst.refmap.json'
+    add sourceSets.main, 'mixins.w5rst.refmap.json'
 }
 
 processResources {
@@ -113,11 +113,11 @@ processResources {
 jar {
     manifest.attributes(
             'Manifest-Version': 1.0,
-            'MixinConfigs': 'mixins.kami.json',
+            'MixinConfigs': 'mixins.w5rst.json',
             'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
             'TweakOrder': 0,
             'FMLCorePluginContainsFMLMod': 'true',
-            'FMLCorePlugin': 'com.wurst.wurstclient.mixin.MixinLoaderForge',
+            'FMLCorePlugin': 'com.w5rst.w5rstclient.mixin.MixinLoaderForge',
             'ForceLoadAsMod': 'true'
     )
 

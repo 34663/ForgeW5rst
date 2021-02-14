@@ -1,0 +1,10 @@
+{
+  "verbose": false,
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.w5rst.w5rstclient.mixin.client",
+  "refmap": "mixins.w5rst.refmap.json",
+  "client": [
+    "MixinMinecraft",
+    "entity.MixinEntityPlayerSP"
+  ]
+}
