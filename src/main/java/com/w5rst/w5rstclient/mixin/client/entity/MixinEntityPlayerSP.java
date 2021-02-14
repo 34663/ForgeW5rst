@@ -19,7 +19,9 @@ public abstract class MixinEntityPlayerSP extends EntityPlayer {
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
     private void onUpdateWalkingPlayer(CallbackInfo ci) {
         UpdateEvent updateEvent = new UpdateEvent();
-        if (updateEvent.call().isCancelled()) {
+        updateEvent.call();
+
+        if (updateEvent.isCancelled()) {
             ci.cancel();
         }
     }

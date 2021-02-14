@@ -5,6 +5,7 @@
   "refmap": "mixins.w5rst.refmap.json",
   "client": [
     "MixinMinecraft",
-    "entity.MixinEntityPlayerSP"
+    "entity.MixinEntityPlayerSP",
+    "gui.MixinGuiNewChat"
   ]
 }

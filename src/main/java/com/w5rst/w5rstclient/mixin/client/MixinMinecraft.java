@@ -12,7 +12,9 @@ public class MixinMinecraft {
     @Inject(method = "rightClickMouse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelayTimer:I"), cancellable = true)
     private void rightClickMouse(CallbackInfo ci) {
         RightClickMouseEvent rightClickMouseEvent = new RightClickMouseEvent();
-        if (rightClickMouseEvent.call().isCancelled()) {
+        rightClickMouseEvent.call();
+
+        if (rightClickMouseEvent.isCancelled()) {
             ci.cancel();
         }
     }

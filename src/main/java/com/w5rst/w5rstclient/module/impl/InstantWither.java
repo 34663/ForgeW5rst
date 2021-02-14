@@ -6,6 +6,7 @@ import com.w5rst.w5rstclient.event.impl.RightClickMouseEvent;
 import com.w5rst.w5rstclient.event.impl.UpdateEvent;
 import com.w5rst.w5rstclient.module.Module;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class InstantWither extends Module {
     private final ArrayList<BlockPos> positions = new ArrayList<>();
+    private final ArrayList<BlockPos> badpositions = new ArrayList<>();
     private boolean soulSand, skull;
     private int currentSlot, delay, sandStackCount, skullStackCount;
 
@@ -29,6 +31,7 @@ public class InstantWither extends Module {
     @Override
     public void onDisabled() {
         super.onDisabled();
+        this.positions.clear();
         soulSand = false;
         skull = false;
         currentSlot = -1;
@@ -45,7 +48,6 @@ public class InstantWither extends Module {
             BlockPos startPos = mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit);
             EnumFacing front = mc.player.getHorizontalFacing();
             EnumFacing left = front.rotateYCCW();
-            this.positions.clear();
             currentSlot = mc.player.inventory.currentItem;
             int i, slot1 = -1, slot2 = -1;
             int[][] offset;
@@ -68,7 +70,7 @@ public class InstantWither extends Module {
                 }
             }
 
-            // ItemCheck
+            // StackCountCheck
             if (sandStackCount >= 4) {
                 soulSand = true;
             } else {
@@ -81,7 +83,19 @@ public class InstantWither extends Module {
                 W5rst.WriteChat("We don't have enough Skulls.");
             }
 
+            // BlockCheck
+            this.badpositions.clear();
+            BlockPos[] badPos = new BlockPos[]{startPos.up(0).offset(front, 0).offset(left, 1), startPos.up(0).offset(front, 0).offset(left, -1)};
+            for (BlockPos pos : badPos) {
+                IBlockState badBlockState = mc.world.getBlockState(pos);
+                if (badBlockState.getMaterial() != Material.AIR) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+
             // Place Blocks
+            this.positions.clear();
             if (soulSand && slot1 != -1) {
                 offset = new int[][]{new int[3], {0, 1, 0}, {1, 1, 0}, {-1, 1, 0}};
                 for (i = offset.length, b = 0; b < i; ) {
