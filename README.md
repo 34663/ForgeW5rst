@@ -1,2 +1,3 @@
 # ForgeW5rst
-テスト
+2b2t用アシストクライアント。
+*Unofficial ForgeWurst.*
