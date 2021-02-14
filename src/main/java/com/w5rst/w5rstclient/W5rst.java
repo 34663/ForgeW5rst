@@ -35,7 +35,7 @@ public class W5rst implements IMC {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        logger.info("[ForgeWurst] Initializing...");
+        WriteLine("Initializing...");
         MinecraftForge.EVENT_BUS.register(this);
         (eventManager = new EventManager()).initialize();
         (moduleManager = new ModuleManager()).initialize();
