@@ -6,6 +6,12 @@
   "client": [
     "MixinMinecraft",
     "entity.MixinEntityPlayerSP",
-    "gui.MixinGuiNewChat"
+    "gui.MixinGuiIngame",
+    "gui.MixinGuiNewChat",
+    "gui.inventory.MixinGuiEditSign"
+  ],
+  "mixins": [
+    "block.MixinBlock",
+    "network.MixinNetworkManager"
   ]
 }

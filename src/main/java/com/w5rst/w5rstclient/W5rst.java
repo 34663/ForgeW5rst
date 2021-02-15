@@ -20,8 +20,12 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 
-@Mod(modid = "w5rst", name = "W5rst Client", version = "0.1")
+@Mod(modid = W5rst.CLIENT_ID, name = W5rst.CLIENT_NAME, version = W5rst.CLIENT_VERSION)
 public class W5rst implements IMC {
+    public final static String CLIENT_ID = "w5rst";
+    public final static String CLIENT_NAME = "W5rst Client";
+    public final static String CLIENT_VERSION = "B3";
+
     private static Logger logger;
     private static EventManager eventManager;
     private static ModuleManager moduleManager;
@@ -106,9 +110,5 @@ public class W5rst implements IMC {
 
     public static SaveLoad getSaveLoad() {
         return saveLoad;
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 }

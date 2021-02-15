@@ -19,7 +19,7 @@ public class ToggleCommand extends Command {
             Module module = W5rst.getModuleManager().getClazzString(args[0]);
             if (module != null) {
                 module.toggle();
-                W5rst.WriteChat(module.getName() + " was toggled.");
+                W5rst.WriteChat(String.format(module.getName() + " was %s.", module.isEnabled() ? "Enabled" : "Disabled"));
             } else {
                 W5rst.WriteChat("Module was not found");
             }

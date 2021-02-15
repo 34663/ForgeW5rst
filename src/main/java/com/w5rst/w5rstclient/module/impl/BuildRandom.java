@@ -5,6 +5,7 @@ import com.w5rst.w5rstclient.event.Event;
 import com.w5rst.w5rstclient.module.Module;
 import com.w5rst.w5rstclient.utilities.IMC;
 import com.w5rst.w5rstclient.event.impl.UpdateEvent;
+import com.w5rst.w5rstclient.utilities.Utils;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketAnimation;
@@ -78,7 +79,7 @@ public class BuildRandom extends Module {
                 if (eyesPos.squareDistanceTo(hitVec) <= 36.0) {
                     if (distanceSqPosVec <= eyesPos.squareDistanceTo(posVec.add(dirVec))) {
                         if (IMC.mc.world.rayTraceBlocks(eyesPos, hitVec, false, true, false) == null) {
-                            float[] rotations = getNeededRotations(hitVec);
+                            float[] rotations = Utils.getNeededRotations(hitVec);
                             // ServerSide Rotation
                             IMC.mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotations[0], rotations[1], IMC.mc.player.onGround));
 
@@ -98,16 +99,5 @@ public class BuildRandom extends Module {
     private boolean checkHeldItem() {
         ItemStack stack = IMC.mc.player.inventory.getCurrentItem();
         return !stack.isEmpty() && stack.getItem() instanceof ItemBlock;
-    }
-
-    public static float[] getNeededRotations(Vec3d vec) {
-        Vec3d eyesPos = new Vec3d(IMC.mc.player.posX, IMC.mc.player.posY + IMC.mc.player.getEyeHeight(), IMC.mc.player.posZ);
-        double diffX = vec.x - eyesPos.x;
-        double diffY = vec.y - eyesPos.y;
-        double diffZ = vec.z - eyesPos.z;
-        double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
-        float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F;
-        float pitch = (float) -Math.toDegrees(Math.atan2(diffY, diffXZ));
-        return new float[]{ IMC.mc.player.rotationYaw + MathHelper.wrapDegrees(yaw - IMC.mc.player.rotationYaw), IMC.mc.player.rotationPitch + MathHelper.wrapDegrees(pitch - IMC.mc.player.rotationPitch) };
     }
 }

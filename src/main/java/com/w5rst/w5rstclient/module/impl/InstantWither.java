@@ -5,15 +5,13 @@ import com.w5rst.w5rstclient.event.Event;
 import com.w5rst.w5rstclient.event.impl.RightClickMouseEvent;
 import com.w5rst.w5rstclient.event.impl.UpdateEvent;
 import com.w5rst.w5rstclient.module.Module;
+import com.w5rst.w5rstclient.utilities.Utils;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketAnimation;
-import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 
 import java.util.ArrayList;
@@ -108,7 +106,7 @@ public class InstantWither extends Module {
                     for (BlockPos pos : this.positions) {
                         if (mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
                             mc.player.inventory.currentItem = slot1;
-                            this.placeBlock(pos);
+                            Utils.placeBlock(pos);
                         }
                     }
                 }
@@ -127,7 +125,7 @@ public class InstantWither extends Module {
                     for (BlockPos pos : this.positions) {
                         if (mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
                             mc.player.inventory.currentItem = slot2;
-                            this.placeBlock(pos);
+                            Utils.placeBlock(pos);
                         }
                     }
                 }
@@ -144,35 +142,5 @@ public class InstantWither extends Module {
         if (event instanceof UpdateEvent) {
             delay--;
         }
-    }
-
-    public void placeBlock(BlockPos pos) {
-        Vec3d eyesPos = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-        final Vec3d posVec = new Vec3d(pos).add(0.5, 0.5, 0.5);
-
-        for (EnumFacing facing : EnumFacing.values()) {
-            final BlockPos neighbor = pos.offset(facing);
-            if (mc.world.getBlockState(neighbor).getBlock().canCollideCheck(mc.world.getBlockState(pos), false)) {
-                final Vec3d dirVec = new Vec3d(facing.getDirectionVec());
-                final Vec3d hitVec = posVec.add(dirVec.scale(0.5));
-                if (eyesPos.squareDistanceTo(hitVec) <= Math.pow(6.0, 2.0)) {
-                    float[] rotations = getNeededRotations(hitVec);
-                    mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotations[0], rotations[1], mc.player.onGround));
-                    mc.playerController.processRightClickBlock(mc.player, mc.world, neighbor, facing.getOpposite(), hitVec, EnumHand.MAIN_HAND);
-                    mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-                }
-            }
-        }
-    }
-
-    public static float[] getNeededRotations(Vec3d vec) {
-        Vec3d eyesPos = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-        double diffX = vec.x - eyesPos.x;
-        double diffY = vec.y - eyesPos.y;
-        double diffZ = vec.z - eyesPos.z;
-        double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
-        float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F;
-        float pitch = (float) -Math.toDegrees(Math.atan2(diffY, diffXZ));
-        return new float[]{ mc.player.rotationYaw + MathHelper.wrapDegrees(yaw - mc.player.rotationYaw), mc.player.rotationPitch + MathHelper.wrapDegrees(pitch - mc.player.rotationPitch) };
     }
 }

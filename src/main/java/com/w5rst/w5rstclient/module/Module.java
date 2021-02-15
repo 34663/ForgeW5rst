@@ -23,12 +23,10 @@ public abstract class Module implements IMC, Listener {
             MinecraftForge.EVENT_BUS.register(this);
             W5rst.getEventManager().register(this);
             onEnabled();
-            mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Enabled " + this.getName()));
         } else {
             MinecraftForge.EVENT_BUS.unregister(this);
             W5rst.getEventManager().unregister(this);
             onDisabled();
-            mc.ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString("Disabled " + this.getName()));
         }
     }
 

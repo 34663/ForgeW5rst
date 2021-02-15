@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = 'b2'
+version = project.version
 group = 'com.w5rst'
 
 compileJava {

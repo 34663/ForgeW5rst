@@ -1,8 +1,6 @@
 package com.w5rst.w5rstclient.module;
 
-import com.w5rst.w5rstclient.module.impl.AntiSpam;
-import com.w5rst.w5rstclient.module.impl.BuildRandom;
-import com.w5rst.w5rstclient.module.impl.InstantWither;
+import com.w5rst.w5rstclient.module.impl.*;
 
 import java.util.ArrayList;
 
@@ -18,6 +16,8 @@ public class ModuleManager {
         addModule(new BuildRandom("BuildRandom", 0));
         addModule(new InstantWither("InstantWither", 0));
         addModule(new AntiSpam("AntiSpam", 0));
+        addModule(new AutoSign("AutoSign", 0));
+        addModule(new AutoHighway("AutoHighway", 0));
     }
 
     private void addModule(Module module) {
